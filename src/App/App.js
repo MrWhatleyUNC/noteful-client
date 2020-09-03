@@ -47,8 +47,6 @@ class App extends Component {
 
   handleAddFolder = (e) =>{
     e.preventDefault()
-    console.log(e.target['new-folder'].value)
-    console.log(e.currentTarget.value)
     let folder ={
         name: e.target['new-folder'].value
     }
