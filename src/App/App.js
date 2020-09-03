@@ -44,6 +44,7 @@ class App extends Component {
   };
 
   handleAddFolder = (e) => {
+    e.preventDefault();
     let folder = {
       name: e.target["new-folder"].value,
     };
@@ -54,16 +55,25 @@ class App extends Component {
         "content-type": "application/json",
       },
       body: JSON.stringify(folder),
-    }).then((res) => {
-      if (res.ok) {
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((r) => Promise.reject(r));
+        }
+        return res.json();
+      })
+      .then((folder) => {
         this.setState({
-          folders: this.state.folders.push(res),
+          folders: [...this.state.folders, folder],
         });
-      }
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   handleAddNote = (e) => {
+    e.preventDefault();
     let note = {
       name: e.target["new-note"].value,
       modified: new Date(),
@@ -76,13 +86,21 @@ class App extends Component {
         "content-type": "application/json",
       },
       body: JSON.stringify(note),
-    }).then((res) => {
-      if (res.ok) {
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((r) => Promise.reject(r));
+        }
+        return res.json();
+      })
+      .then((note) => {
         this.setState({
-          notes: this.state.notes.push(res),
+          notes: [...this.state.notes, note],
         });
-      }
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   renderNavRoutes() {
