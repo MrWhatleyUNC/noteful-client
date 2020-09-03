@@ -1,48 +1,48 @@
-import React, {Component} from 'react';
-import {Route, Link} from 'react-router-dom';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import NoteListNav from '../NoteListNav/NoteListNav';
-import NotePageNav from '../NotePageNav/NotePageNav';
-import NoteListMain from '../NoteListMain/NoteListMain';
-import NotePageMain from '../NotePageMain/NotePageMain';
-import AddFolder from './AddFolder';
-import AddNote from './AddNote';
-import ApiContext from '../ApiContext';
-import config from '../config';
-import './App.css';
+import React, { Component } from "react";
+import { Route, Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import NoteListNav from "../NoteListNav/NoteListNav";
+import NotePageNav from "../NotePageNav/NotePageNav";
+import NoteListMain from "../NoteListMain/NoteListMain";
+import NotePageMain from "../NotePageMain/NotePageMain";
+import ApiContext from "../ApiContext";
+import config from "../config";
+import AddFolder from "./AddFolder";
+import AddNote from "./AddNote";
+import "./App.css";
 
 class App extends Component {
-    state = {
-        notes: [],
-        folders: []
-    };
+  state = {
+    notes: [],
+    folders: [],
+  };
 
-    componentDidMount() {
-        Promise.all([
-            fetch(`${config.API_ENDPOINT}/notes`),
-            fetch(`${config.API_ENDPOINT}/folders`)
-        ])
-            .then(([notesRes, foldersRes]) => {
-                if (!notesRes.ok)
-                    return notesRes.json().then(e => Promise.reject(e));
-                if (!foldersRes.ok)
-                    return foldersRes.json().then(e => Promise.reject(e));
+  componentDidMount() {
+    Promise.all([
+      fetch(`${config.API_ENDPOINT}/notes`),
+      fetch(`${config.API_ENDPOINT}/folders`),
+    ])
+      .then(([notesRes, foldersRes]) => {
+        if (!notesRes.ok) return notesRes.json().then((e) => Promise.reject(e));
+        if (!foldersRes.ok)
+          return foldersRes.json().then((e) => Promise.reject(e));
 
-                return Promise.all([notesRes.json(), foldersRes.json()]);
-            })
-            .then(([notes, folders]) => {
-                this.setState({notes, folders});
-            })
-            .catch(error => {
-                console.error({error});
-            });
-    }
+        return Promise.all([notesRes.json(), foldersRes.json()]);
+      })
+      .then(([notes, folders]) => {
+        this.setState({ notes, folders });
+      })
+      .catch((error) => {
+        console.error({ error });
+      });
+  }
 
-    handleDeleteNote = noteId => {
-        this.setState({
-            notes: this.state.notes.filter(note => note.id !== noteId)
-        });
-    };
+  handleDeleteNote = (noteId) => {
+    this.setState({
+      notes: this.state.notes.filter((note) => note.id !== noteId),
+    });
+  };
+
 
     handleAddFolder = () =>{
 
