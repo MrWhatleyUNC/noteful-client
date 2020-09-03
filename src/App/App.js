@@ -43,11 +43,10 @@ class App extends Component {
     });
   };
 
-
-  handleAddFolder = (e) =>{
-    let folder ={
-        name: e.target['new-folder'].value
-    }
+  handleAddFolder = (e) => {
+    let folder = {
+      name: e.target["new-folder"].value,
+    };
 
     fetch(`${config.API_ENDPOINT}/folders`, {
       method: "POST",
@@ -66,24 +65,24 @@ class App extends Component {
 
   handleAddNote = (e) => {
     let note = {
-        name: e.target['new-note'].value,
-        modified: new Date(),
-        folderId: e.target['folder'].value,
-        content: e.target['note-content'].value
-    }
+      name: e.target["new-note"].value,
+      modified: new Date(),
+      folderId: e.target["folder"].value,
+      content: e.target["note-content"].value,
+    };
     fetch(`${config.API_ENDPOINT}/notes`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(note),
-      }).then((res) => {
-        if (res.ok) {
-          this.setState({
-            folders: this.state.notes.push(res),
-          });
-        }
-      });
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(note),
+    }).then((res) => {
+      if (res.ok) {
+        this.setState({
+          notes: this.state.notes.push(res),
+        });
+      }
+    });
   };
 
   renderNavRoutes() {

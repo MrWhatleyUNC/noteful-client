@@ -3,8 +3,22 @@ import NotefulForm from "../NotefulForm/NotefulForm";
 import ApiContext from "../ApiContext";
 
 export default class AddFolder extends Component {
-  static contextType = ApiContext;
+  state = {
+    name: "",
+  };
 
+  static contextType = ApiContext;
+  validateName() {
+    const name = this.state.name;
+    if (name.length <= 0) {
+      return "Name is required";
+    }
+  }
+  updateName(event) {
+    this.setState({
+      name: event.target.value,
+    });
+  }
   render() {
     return (
       <NotefulForm
@@ -12,8 +26,15 @@ export default class AddFolder extends Component {
         onSubmit={(e) => this.context.addFolder(e)}
       >
         <label htmlFor="new-folder">Folder Name:</label>
-        <input name="new-folder" id="new-folder" type="text" />
+        <input
+          onChange={(event) => this.updateName(event)}
+          name="new-folder"
+          id="new-folder"
+          type="text"
+          required
+        />
         <button type="submit">Submit</button>
+        <p>{this.validateName()}</p>
       </NotefulForm>
     );
   }
