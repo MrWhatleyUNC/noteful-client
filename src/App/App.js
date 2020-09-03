@@ -10,6 +10,7 @@ import config from "../config";
 import AddFolder from "./AddFolder";
 import AddNote from "./AddNote";
 import "./App.css";
+import cuid from 'cuid';
 
 class App extends Component {
   state = {
@@ -44,13 +45,34 @@ class App extends Component {
   };
 
 
-    handleAddFolder = () =>{
-
+  handleAddFolder = (e) =>{
+    e.preventDefault()
+    let folder ={
+        name: e.target.value,
+        id: cuid
     }
 
-    handleAddNote = () =>{
-        
-    }
+    fetch(`${config.API_ENDPOINT}/folders`, {
+        method: 'POST',
+        headers: {
+            'content-type':'application/json'
+        },
+        body: folder
+    })
+        .then(res => {
+            if (res.ok){
+                this.setState({
+                    folders: this.state.folders.push(folder)
+                })
+            }
+        })  
+  }
+
+  handleAddNote = (note) =>{
+    this.setState({
+        notes: this.state.notes.push(note)
+    })
+  }
 
     renderNavRoutes() {
         return (
@@ -90,7 +112,9 @@ class App extends Component {
         const value = {
             notes: this.state.notes,
             folders: this.state.folders,
-            deleteNote: this.handleDeleteNote
+            deleteNote: this.handleDeleteNote,
+            addFolder: this.handleAddFolder,
+            addNote: this.handleAddNote
         };
         return (
             <ApiContext.Provider value={value}>

@@ -7,9 +7,9 @@ export default class AddFolder extends Component{
 
     render(){
         return(
-            <NotefulForm className= 'add-folder' onSubmit={this.context.AddFolder}>
+            <NotefulForm className='add-folder' onSubmit={(e)=>this.context.addFolder(e)}>
                     <label htmlFor='new-folder'>Folder Name:</label>
-                    <input name='new-folder' id= 'new-folder' type='text'/>
+                    <input name='new-folder' id='new-folder' type='text'/>
             </NotefulForm>
         )
     }
