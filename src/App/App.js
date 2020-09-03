@@ -10,7 +10,7 @@ import config from "../config";
 import AddFolder from "./AddFolder";
 import AddNote from "./AddNote";
 import "./App.css";
-import cuid from "cuid";
+// import cuid from 'cuid';
 
 class App extends Component {
   state = {
@@ -45,10 +45,10 @@ class App extends Component {
   };
 
   handleAddFolder = (e) => {
-    // e.preventDefault();
     let folder = {
       name: e.target["new-folder"].value,
     };
+
     fetch(`${config.API_ENDPOINT}/folders`, {
       method: "POST",
       headers: {
