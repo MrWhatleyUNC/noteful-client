@@ -10,7 +10,7 @@ import config from "../config";
 import AddFolder from "./AddFolder";
 import AddNote from "./AddNote";
 import "./App.css";
-import cuid from 'cuid';
+import cuid from "cuid";
 
 class App extends Component {
   state = {
@@ -44,93 +44,79 @@ class App extends Component {
     });
   };
 
-
-  handleAddFolder = (e) =>{
-    e.preventDefault()
-    let folder ={
-        name: e.target.value,
-        id: cuid
-    }
-
+  handleAddFolder = (e) => {
+    // e.preventDefault();
+    let folder = {
+      name: e.target["new-folder"].value,
+    };
     fetch(`${config.API_ENDPOINT}/folders`, {
-        method: 'POST',
-        headers: {
-            'content-type':'application/json'
-        },
-        body: folder
-    })
-        .then(res => {
-            if (res.ok){
-                this.setState({
-                    folders: this.state.folders.push(folder)
-                })
-            }
-        })  
-  }
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(folder),
+    }).then((res) => {
+      if (res.ok) {
+        this.setState({
+          folders: this.state.folders.push(res),
+        });
+      }
+    });
+  };
 
-  handleAddNote = (note) =>{
+  handleAddNote = (note) => {
     this.setState({
-        notes: this.state.notes.push(note)
-    })
+      notes: this.state.notes.push(note),
+    });
+  };
+
+  renderNavRoutes() {
+    return (
+      <>
+        {["/", "/folder/:folderId"].map((path) => (
+          <Route exact key={path} path={path} component={NoteListNav} />
+        ))}
+        <Route path="/note/:noteId" component={NotePageNav} />
+        <Route path="/add-folder" component={AddFolder} />
+        <Route path="/add-note" component={AddNote} />
+      </>
+    );
   }
 
-    renderNavRoutes() {
-        return (
-            <>
-                {['/', '/folder/:folderId'].map(path => (
-                    <Route
-                        exact
-                        key={path}
-                        path={path}
-                        component={NoteListNav}
-                    />
-                ))}
-                <Route path="/note/:noteId" component={NotePageNav} />
-                <Route path="/add-folder" component={AddFolder} />
-                <Route path="/add-note" component={AddNote} />
-            </>
-        );
-    }
+  renderMainRoutes() {
+    return (
+      <>
+        {["/", "/folder/:folderId"].map((path) => (
+          <Route exact key={path} path={path} component={NoteListMain} />
+        ))}
+        <Route path="/note/:noteId" component={NotePageMain} />
+      </>
+    );
+  }
 
-    renderMainRoutes() {
-        return (
-            <>
-                {['/', '/folder/:folderId'].map(path => (
-                    <Route
-                        exact
-                        key={path}
-                        path={path}
-                        component={NoteListMain}
-                    />
-                ))}
-                <Route path="/note/:noteId" component={NotePageMain} />
-            </>
-        );
-    }
- 
-    render() {
-        const value = {
-            notes: this.state.notes,
-            folders: this.state.folders,
-            deleteNote: this.handleDeleteNote,
-            addFolder: this.handleAddFolder,
-            addNote: this.handleAddNote
-        };
-        return (
-            <ApiContext.Provider value={value}>
-                <div className="App">
-                    <nav className="App__nav">{this.renderNavRoutes()}</nav>
-                    <header className="App__header">
-                        <h1>
-                            <Link to="/">Noteful</Link>{' '}
-                            <FontAwesomeIcon icon="check-double" />
-                        </h1>
-                    </header>
-                    <main className="App__main">{this.renderMainRoutes()}</main>
-                </div>
-            </ApiContext.Provider>
-        );
-    }
+  render() {
+    const value = {
+      notes: this.state.notes,
+      folders: this.state.folders,
+      deleteNote: this.handleDeleteNote,
+      addFolder: this.handleAddFolder,
+      addNote: this.handleAddNote,
+    };
+    return (
+      <ApiContext.Provider value={value}>
+        <div className="App">
+          <nav className="App__nav">{this.renderNavRoutes()}</nav>
+          <header className="App__header">
+            <h1>
+              <Link to="/">Noteful</Link>{" "}
+              <FontAwesomeIcon icon="check-double" />
+            </h1>
+          </header>
+          <main className="App__main">{this.renderMainRoutes()}</main>
+        </div>
+      </ApiContext.Provider>
+    );
+  }
 }
 
 export default App;
