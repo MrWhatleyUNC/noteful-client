@@ -10,7 +10,6 @@ import config from "../config";
 import AddFolder from "./AddFolder";
 import AddNote from "./AddNote";
 import "./App.css";
-// import cuid from 'cuid';
 
 class App extends Component {
   state = {
@@ -46,7 +45,6 @@ class App extends Component {
 
 
   handleAddFolder = (e) =>{
-    e.preventDefault()
     let folder ={
         name: e.target['new-folder'].value
     }
@@ -66,10 +64,26 @@ class App extends Component {
     });
   };
 
-  handleAddNote = (note) => {
-    this.setState({
-      notes: this.state.notes.push(note),
-    });
+  handleAddNote = (e) => {
+    let note = {
+        name: e.target['new-note'].value,
+        modified: new Date(),
+        folderId: e.target['folder'].value,
+        content: e.target['note-content'].value
+    }
+    fetch(`${config.API_ENDPOINT}/notes`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(note),
+      }).then((res) => {
+        if (res.ok) {
+          this.setState({
+            folders: this.state.notes.push(res),
+          });
+        }
+      });
   };
 
   renderNavRoutes() {
